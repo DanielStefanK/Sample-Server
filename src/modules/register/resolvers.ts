@@ -8,6 +8,18 @@ export const resolvers: ResolverMap = {
   },
   Mutation: {
     register: async (_, { email, password }: GQL.IRegisterOnMutationArguments) => {
+      const userAlreadyExists = await User.findOne({ where: { email }, select: ['id'] })
+
+      if (userAlreadyExists) {
+        // TODO: revise for i18n error handling in frontend
+        return [
+          {
+            path: "email",
+            message: "already taken"
+          }
+        ]
+      }
+
       const pass = await bcrypt.hash(password, 10)
 
       const user = User.create({
@@ -16,7 +28,7 @@ export const resolvers: ResolverMap = {
       })
 
       await user.save()
-      return true
+      return null
     }
   }
 }
