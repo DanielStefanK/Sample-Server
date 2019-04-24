@@ -1,4 +1,3 @@
-import "reflect-metadata";
 import { GraphQLServer } from 'graphql-yoga'
 
 import { resolvers } from './resolvers'
