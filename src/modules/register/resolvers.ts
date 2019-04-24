@@ -3,6 +3,9 @@ import { ResolverMap } from "../../types/graphql-utils";
 import { User } from "../../entity/User";
 
 export const resolvers: ResolverMap = {
+  Query: {
+    bye: () => 'hi'
+  },
   Mutation: {
     register: async (_, { email, password }: GQL.IRegisterOnMutationArguments) => {
       const pass = await bcrypt.hash(password, 10)
