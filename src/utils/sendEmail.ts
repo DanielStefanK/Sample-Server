@@ -1,7 +1,7 @@
 import * as SparkPost from 'sparkpost'
 
 
-const client = new SparkPost()
+const client = new SparkPost(process.env.SPARKPOST_API_KEY)
 
 export const sendEmail = async (recipient: string, link: string) => {
   if (process.env.NODE_ENV === 'production') {
