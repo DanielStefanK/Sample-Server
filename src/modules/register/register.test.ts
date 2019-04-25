@@ -1,7 +1,7 @@
 import { request } from 'graphql-request'
 import { User } from '../../entity/User';
 import { createTypeormConn } from '../../utils/createTypeormConn';
-import { getConnection } from 'typeorm';
+import { Connection } from 'typeorm';
 import * as Redis from 'ioredis'
 import fetch from 'node-fetch'
 import { createConfirmEmailLink } from '../../utils/createConfirmEmail';
@@ -25,23 +25,26 @@ mutation {
 
 const host: string = process.env.TEST_HOST || 'http://localhost:4004'
 
+let conn: Connection
+
 beforeEach(async (done) => {
-  try {
-    await createTypeormConn()
-  } catch (err) {
-    // already have a connection
-  }
+  conn = await createTypeormConn()
   done()
 })
 
 afterEach(async (done) => {
-  try {
-
-    const conn = getConnection()
-    await conn.close()
-  } catch (err) {
-    // already have a connection
+  if (conn && conn.isConnected) {
+    conn.close()
   }
+
+  done()
+})
+
+afterAll(async (done) => {
+  if (conn && conn.isConnected) {
+    conn.close()
+  }
+
   done()
 })
 
