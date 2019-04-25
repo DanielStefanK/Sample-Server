@@ -2,12 +2,17 @@ import { request } from 'graphql-request'
 import { User } from '../../entity/User';
 import { createTypeormConn } from '../../utils/createTypeormConn';
 import { getConnection } from 'typeorm';
+import * as Redis from 'ioredis'
+import fetch from 'node-fetch'
+import { createConfirmEmailLink } from '../../utils/createConfirmEmail';
 
 const email = "email@asdas.com"
 const password = "test123"
 
 const faultyEmail = "e"
 const faultyPass = "1"
+
+const redis = new Redis()
 
 const mutation = (e: string, p: string): string => `
 mutation {
@@ -30,8 +35,13 @@ beforeEach(async (done) => {
 })
 
 afterEach(async (done) => {
-  const conn = getConnection()
-  await conn.close()
+  try {
+
+    const conn = getConnection()
+    await conn.close()
+  } catch (err) {
+    // already have a connection
+  }
   done()
 })
 
@@ -87,5 +97,27 @@ describe("Register module", () => {
 
     const users = await User.find()
     expect(users).toHaveLength(0)
+  })
+
+
+  test('Test Email confirmation Link', async (done) => {
+    const { id, confirmed } = await User.create({ email, password }).save()
+
+    expect(confirmed).toBeFalsy()
+
+
+    const url = await createConfirmEmailLink(host, id, redis)
+
+    const res = await fetch(url)
+    const text = await res.text()
+    expect(text).toEqual('ok')
+
+    const user = await User.findOne({ where: { id } }) as User
+    expect(user.confirmed).toBe(true)
+
+    const second = await fetch(url)
+    const text2 = await second.text()
+    expect(text2).toEqual('Not found')
+    done()
   })
 }) 
