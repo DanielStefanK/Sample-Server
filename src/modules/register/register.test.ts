@@ -3,6 +3,7 @@ import { User } from '../../entity/User';
 import { createTypeormConn } from '../../utils/createTypeormConn';
 import { Connection } from 'typeorm';
 import * as Redis from 'ioredis'
+// tslint:disable-next-line: no-implicit-dependencies
 import fetch from 'node-fetch'
 import { createConfirmEmailLink } from '../../utils/createConfirmEmail';
 
