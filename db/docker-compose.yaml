@@ -2,7 +2,7 @@ version: "2"
 services:
   db:
     image: "postgres:11"
-    container_name: "my_postgres"
+    container_name: "tw-postgres"
     environment:
       POSTGRES_PASSWORD: postgres
     ports:
@@ -11,7 +11,18 @@ services:
       - my_dbdata:/var/lib/postgresql/data
   adminer:
     image: adminer
+    container_name: "tw-adminer"
     ports:
       - 11000:8080
+  redis:
+    image: "bitnami/redis:latest"
+    container_name: "tw-redis"
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/bitnami/redis/data
 volumes:
   my_dbdata:
+  redis_data:
