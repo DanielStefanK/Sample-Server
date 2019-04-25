@@ -10,7 +10,7 @@ import { createConfirmEmailLink } from '../../utils/createConfirmEmail';
 
 let conn: Connection
 
-const clearAll = async (entities: ObjectType<BaseEntity>[]) => {
+const clearAll = async (entities: Array<ObjectType<BaseEntity>>) => {
   if (!conn || !conn.isConnected) {
     conn = await createTypeormConn()
   }
