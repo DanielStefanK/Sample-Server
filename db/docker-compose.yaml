@@ -11,6 +11,8 @@ services:
       - my_dbdata:/var/lib/postgresql/data
   adminer:
     image: adminer
+    depends_on: 
+      - db
     container_name: "tw-adminer"
     ports:
       - "11000:8080"
@@ -24,6 +26,8 @@ services:
     volumes:
       - redis_data:/bitnami/redis/data
   redis-commander:
+    depends_on: 
+      - redis
     container_name: "tw-redis-commander"
     hostname: redis-commander
     image: rediscommander/redis-commander:latest
