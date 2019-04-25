@@ -1,7 +1,5 @@
 import { request } from 'graphql-request'
 import { User } from '../../entity/User';
-import { startServer } from '../../startServer';
-import { AddressInfo } from 'net';
 import { createTypeormConn } from '../../utils/createTypeormConn';
 import { getConnection } from 'typeorm';
 
@@ -20,13 +18,7 @@ mutation {
 }
 `;
 
-let getHost = () => ''
-beforeAll(async (done) => {
-  const app = await startServer()
-  const { port } = app.address() as AddressInfo
-  getHost = () => `http://127.0.0.1:${port}`
-  done()
-})
+const host: string = process.env.TEST_HOST || 'http://localhost:4004'
 
 beforeEach(async (done) => {
   try {
@@ -46,7 +38,7 @@ afterEach(async (done) => {
 describe("Register module", () => {
 
   test('Register User', async (done) => {
-    const response = await request(getHost(), mutation(email, password))
+    const response = await request(host, mutation(email, password))
     expect(response).toEqual({ register: null })
     const users = await User.find({ where: { email } })
     expect(users).toHaveLength(1)
@@ -59,10 +51,10 @@ describe("Register module", () => {
   });
 
   test('Register Duplicate fails', async (done) => {
-    const response = await request(getHost(), mutation(email, password))
+    const response = await request(host, mutation(email, password))
     expect(response).toEqual({ register: null })
 
-    const regAgain: any = await request(getHost(), mutation(email, password))
+    const regAgain: any = await request(host, mutation(email, password))
     expect(regAgain.register).toHaveLength(1)
 
     expect(regAgain.register[0].path).toEqual("email")
@@ -72,7 +64,7 @@ describe("Register module", () => {
   })
 
   test('Invalid Register Input', async () => {
-    const response: any = await request(getHost(), mutation(faultyEmail, faultyPass))
+    const response: any = await request(host, mutation(faultyEmail, faultyPass))
     expect(response.register).toHaveLength(3)
 
     const users = await User.find()
@@ -80,7 +72,7 @@ describe("Register module", () => {
   })
 
   test('Invalid Email Register', async () => {
-    const response: any = await request(getHost(), mutation("asdasdasdasd", password))
+    const response: any = await request(host, mutation("asdasdasdasd", password))
     expect(response.register).toHaveLength(1)
     expect(response.register[0].path).toEqual("email")
 
@@ -89,7 +81,7 @@ describe("Register module", () => {
   })
 
   test('Invalid Password Register', async () => {
-    const response: any = await request(getHost(), mutation(email, faultyPass))
+    const response: any = await request(host, mutation(email, faultyPass))
     expect(response.register).toHaveLength(1)
     expect(response.register[0].path).toEqual("password")
 
