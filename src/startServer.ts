@@ -35,6 +35,7 @@ export const startServer = async () => {
 
     if (userId) {
       User.update({ id: userId }, { confirmed: true })
+      redis.del(id)
       res.send('ok')
       return
     }
