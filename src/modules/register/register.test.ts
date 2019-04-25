@@ -1,10 +1,11 @@
-import { request } from 'graphql-request'
-import { User } from '../../entity/User';
-import { createTypeormConn } from '../../utils/createTypeormConn';
-import { Connection } from 'typeorm';
-import * as Redis from 'ioredis'
 // tslint:disable-next-line: no-implicit-dependencies
 import fetch from 'node-fetch'
+import { request } from 'graphql-request'
+import { Connection } from 'typeorm';
+import * as Redis from 'ioredis'
+
+import { User } from '../../entity/User';
+import { createTypeormConn } from '../../utils/createTypeormConn';
 import { createConfirmEmailLink } from '../../utils/createConfirmEmail';
 
 const email = "email@asdas.com"

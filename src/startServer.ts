@@ -1,13 +1,14 @@
+import * as fs from 'fs'
+import * as path from 'path'
+import * as dotenv from 'dotenv'
+import * as Redis from 'ioredis'
+import { GraphQLSchema } from 'graphql';
 import { GraphQLServer } from 'graphql-yoga'
 import { importSchema } from 'graphql-import'
-import { createTypeormConn } from "./utils/createTypeormConn";
-import * as dotenv from 'dotenv'
-import * as path from 'path'
-import * as fs from 'fs'
 import { mergeSchemas, makeExecutableSchema } from "graphql-tools"
-import { GraphQLSchema } from 'graphql';
-import * as Redis from 'ioredis'
+
 import { User } from './entity/User';
+import { createTypeormConn } from "./utils/createTypeormConn";
 
 dotenv.config()
 const port = process.env.NODE_ENV === "development" ? process.env.SERVER_PORT : process.env.TEST_SERVER_PORT
