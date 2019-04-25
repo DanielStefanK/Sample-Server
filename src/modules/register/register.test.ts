@@ -1,12 +1,29 @@
 // tslint:disable-next-line: no-implicit-dependencies
 import fetch from 'node-fetch'
 import { request } from 'graphql-request'
-import { Connection } from 'typeorm';
+import { Connection, ObjectType, BaseEntity } from 'typeorm';
 import * as Redis from 'ioredis'
 
 import { User } from '../../entity/User';
 import { createTypeormConn } from '../../utils/createTypeormConn';
 import { createConfirmEmailLink } from '../../utils/createConfirmEmail';
+
+let conn: Connection
+
+const clearAll = async (entities: ObjectType<BaseEntity>[]) => {
+  if (!conn || !conn.isConnected) {
+    conn = await createTypeormConn()
+  }
+
+  try {
+    for await (const entity of entities) {
+      const repository = await conn.getRepository(entity);
+      await repository.query(`DELETE FROM ${repository.metadata.tableName};`);
+    }
+  } catch (error) {
+    throw new Error(`ERROR: Cleaning test db: ${error}`);
+  }
+}
 
 const email = "email@asdas.com"
 const password = "test123"
@@ -27,26 +44,10 @@ mutation {
 
 const host: string = process.env.TEST_HOST || 'http://localhost:4004'
 
-let conn: Connection
+
 
 beforeEach(async (done) => {
-  conn = await createTypeormConn()
-  done()
-})
-
-afterEach(async (done) => {
-  if (conn && conn.isConnected) {
-    conn.close()
-  }
-
-  done()
-})
-
-afterAll(async (done) => {
-  if (conn && conn.isConnected) {
-    conn.close()
-  }
-
+  await clearAll([User])
   done()
 })
 
