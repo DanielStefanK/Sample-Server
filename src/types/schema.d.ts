@@ -25,10 +25,16 @@ __typename: "Query";
 bye2: string;
 bye: string;
 hello: string;
+me: IUser | null;
 }
 
 interface IHelloOnQueryArguments {
 name?: string | null;
+}
+
+interface IUser {
+__typename: "User";
+email: string;
 }
 
 interface IMutation {

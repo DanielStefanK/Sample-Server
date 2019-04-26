@@ -12,6 +12,7 @@
       "@types/sparkpost": "^2.1.4",
       "@types/uuid": "^3.4.4",
       "@types/yup": "^0.26.12",
+      "axios": "^0.18.0",
       "gql2ts": "^1.10.1",
       "jest": "^24.7.1",
       "node-fetch": "^2.3.0",
@@ -45,7 +46,7 @@
    },
    "scripts": {
       "start": "NODE_ENV=development nodemon --exec ts-node --files src/index.ts",
-      "test": "NODE_ENV=test jest --watch",
+      "test": "NODE_ENV=test jest --watch --runInBand",
       "gen-schema-types": "ts-node --files src/scripts/generateTypes.ts"
    }
 }

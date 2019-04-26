@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import * as dotenv from 'dotenv'
 import * as Redis from 'ioredis'
 import * as session from 'express-session'
@@ -42,7 +43,7 @@ export const startServer = async () => {
 
   const cors = {
     credentials: true,
-    origin: process.env.FRONT_END_ORIGIN || "http://localhost:3000"
+    origin: process.env.NODE_ENV === 'production' ? process.env.FRONT_END_ORIGIN || "http://localhost:3000" : '*'
   };
 
   // TODO: use a graphql endpoint to confirm
