@@ -9,7 +9,11 @@ export const resolvers: ResolverMap = {
 
       const out = await new Promise((res) => {
         session.destroy((err) => {
-          console.log(err)
+          if (err) {
+            console.log(err)
+            res(false)
+            return
+          }
           res(true)
         })
       })
