@@ -10,7 +10,7 @@ import { createConfirmEmailLink } from '../../utils/createConfirmEmail';
 
 let conn: Connection
 
-const clearAll = async (entities: Array<ObjectType<BaseEntity>>) => {
+const clearAll = async (entities: Array<ObjectType<BaseEntity>>): Promise<void> => {
   if (!conn || !conn.isConnected) {
     conn = await createTypeormConn()
   }
@@ -48,6 +48,13 @@ const host: string = process.env.TEST_HOST || 'http://localhost:4004'
 
 beforeEach(async (done) => {
   await clearAll([User])
+  done()
+})
+
+afterAll(async (done) => {
+  if (conn && conn.isConnected) {
+    await conn.close()
+  }
   done()
 })
 

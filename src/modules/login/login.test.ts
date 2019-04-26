@@ -7,7 +7,7 @@ import { createTypeormConn } from '../../utils/createTypeormConn';
 
 let conn: Connection
 
-const clearAll = async (entities: Array<ObjectType<BaseEntity>>) => {
+const clearAll = async (entities: Array<ObjectType<BaseEntity>>): Promise<void> => {
   if (!conn || !conn.isConnected) {
     conn = await createTypeormConn()
   }
@@ -44,6 +44,14 @@ beforeEach(async (done) => {
   await clearAll([User])
   done()
 })
+
+afterAll(async (done) => {
+  if (conn && conn.isConnected) {
+    await conn.close()
+  }
+  done()
+})
+
 
 describe("Login module", () => {
 
