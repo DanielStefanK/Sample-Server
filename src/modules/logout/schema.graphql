@@ -1,0 +1,9 @@
+# import * from "../../shared.graphql"
+
+type Mutation {
+  logout: [Error!]
+}
+
+type Query {
+  bye3: String!
+}
