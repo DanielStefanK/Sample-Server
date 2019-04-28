@@ -8,6 +8,7 @@ import { GraphQLServer } from 'graphql-yoga'
 import { User } from './entity/User';
 import { createTypeormConn } from "./utils/createTypeormConn";
 import { createSchema } from './utils/createSchema';
+import { redisSessionPrefix, redisConfirmIDsPrefix } from "./utils/constants";
 
 dotenv.config()
 
@@ -21,14 +22,14 @@ export const startServer = async () => {
 
   const server = new GraphQLServer({
     schema: createSchema(),
-    context: ({ request }) => ({ redis, url: request.protocol + "://" + request.get("host"), session: request.session })
+    context: ({ request }) => ({ redis, url: request.protocol + "://" + request.get("host"), session: request.session, request })
   })
 
 
   server.express.use(
     session({
       name: "qid",
-      store: new RedisStore({ client: redis as any }),
+      store: new RedisStore({ client: redis as any, prefix: redisSessionPrefix }),
       secret: SESSION_SECRET,
       resave: false,
       saveUninitialized: false,
@@ -49,11 +50,11 @@ export const startServer = async () => {
   // TODO: use a graphql endpoint to confirm
   server.express.get('/confirm/:id', async (req, res) => {
     const { id } = req.params
-    const userId = await redis.get(id)
+    const userId = await redis.get(redisConfirmIDsPrefix + id)
 
     if (userId) {
       await User.update({ id: userId }, { confirmed: true })
-      redis.del(id)
+      redis.del(redisConfirmIDsPrefix + id)
       res.send('ok')
       return
     }

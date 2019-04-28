@@ -2,8 +2,7 @@ import * as bcrypt from "bcrypt"
 
 import { ResolverMap } from "../../types/graphql-utils";
 import { User } from "../../entity/User";
-
-
+import { redisSessionUserIdPrefix } from "../../utils/constants";
 
 
 export const resolvers: ResolverMap = {
@@ -11,7 +10,7 @@ export const resolvers: ResolverMap = {
     bye2: () => 'hi'
   },
   Mutation: {
-    login: async (_, { email, password }: GQL.ILoginOnMutationArguments, { session }) => {
+    login: async (_, { email, password }: GQL.ILoginOnMutationArguments, { session, redis, request }) => {
 
       const user = await User.findOne({ where: { email } })
 
@@ -39,6 +38,11 @@ export const resolvers: ResolverMap = {
       }
 
       session.userId = user.id
+
+      if (request.sessionID) {
+        await redis.lpush(redisSessionUserIdPrefix + user.id, request.sessionID)
+      }
+
       return null
     }
   }

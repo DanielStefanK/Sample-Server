@@ -1,3 +1,4 @@
+// tslint:disable-next-line: no-implicit-dependencies
 import * as rp from "request-promise";
 import * as bcrypt from 'bcrypt'
 import { User } from "../entity/User";
@@ -54,6 +55,23 @@ export class TestClient {
       }
     });
   }
+
+  async logoutAll() {
+    return rp.post(this.url, {
+      ...this.options,
+      body: {
+        query: `
+        mutation {
+          logoutAll {
+            path
+            message
+          }
+        }
+        `
+      }
+    });
+  }
+
 
   async me() {
     return rp.post(this.url, {
