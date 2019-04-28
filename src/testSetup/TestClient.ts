@@ -104,4 +104,38 @@ export class TestClient {
       }
     });
   }
+
+  async sendForgotPassword(email: string) {
+    return rp.post(this.url, {
+      ...this.options,
+      body: {
+        query: `
+        mutation {
+          sendForgotPasswordEmail(email: "${email}") {
+            path
+            message
+          }
+        }
+        `
+      }
+    });
+  }
+
+  async changePasswordWithToken(newPassword: string, token: string) {
+    return rp.post(this.url, {
+      ...this.options,
+      body: {
+        query: `
+        mutation {
+          changePasswordWithToken(newPassword: "${newPassword}", token: "${token}") {
+            path
+            message
+          }
+        }
+        `
+      }
+    });
+  }
+
+
 }

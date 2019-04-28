@@ -28,6 +28,13 @@ export const resolvers: ResolverMap = {
         }]
       }
 
+      if (user.forgotPasswordLock) {
+        return [{
+          path: "login",
+          message: "please recover your password"
+        }]
+      }
+
       const valid = await bcrypt.compare(password, user.password)
 
       if (!valid) {

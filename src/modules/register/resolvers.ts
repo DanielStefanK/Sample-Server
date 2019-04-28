@@ -6,13 +6,12 @@ import { User } from "../../entity/User";
 import { formatYupError } from "../../utils/formatYupError";
 import { createConfirmEmailLink } from "../../utils/createConfirmEmail";
 import { sendEmail } from "../../utils/sendEmail";
+import { passwordModel } from "../../utils/validityModels";
 
 const schema = yup.object().shape({
   email: yup.string().min(3).max(255).email().required(),
-  password: yup.string().min(3).max(255).required()
+  password: passwordModel
 })
-
-
 
 export const resolvers: ResolverMap = {
   Query: {

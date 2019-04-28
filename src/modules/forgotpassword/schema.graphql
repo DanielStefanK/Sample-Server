@@ -1,0 +1,10 @@
+# import * from "../../shared.graphql"
+
+type Mutation {
+  sendForgotPasswordEmail (email: String!): [Error!]
+  changePasswordWithToken (newPassword: String!, token: String!): [Error!]
+}
+
+type Query {
+  bye4: String!
+}
