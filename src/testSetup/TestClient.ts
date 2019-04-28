@@ -1,7 +1,7 @@
 // tslint:disable-next-line: no-implicit-dependencies
-import * as rp from "request-promise";
-import * as bcrypt from 'bcrypt'
-import { User } from "../entity/User";
+import * as rp from 'request-promise';
+import * as bcrypt from 'bcrypt';
+import { User } from '../entity/User';
 
 export class TestClient {
   url: string;
@@ -15,13 +15,13 @@ export class TestClient {
     this.options = {
       withCredentials: true,
       jar: rp.jar(),
-      json: true
+      json: true,
     };
   }
 
   async createConfirmedUser(email: string, password: string): Promise<User> {
-    const pass = await bcrypt.hash(password, 10)
-    return User.create({ email, password: pass, confirmed: true }).save()
+    const pass = await bcrypt.hash(password, 10);
+    return User.create({ email, password: pass, confirmed: true }).save();
   }
 
   async register(email: string, password: string) {
@@ -35,8 +35,8 @@ export class TestClient {
               message
             }
           }
-        `
-      }
+        `,
+      },
     });
   }
 
@@ -51,8 +51,8 @@ export class TestClient {
             message
           }
         }
-        `
-      }
+        `,
+      },
     });
   }
 
@@ -67,11 +67,10 @@ export class TestClient {
             message
           }
         }
-        `
-      }
+        `,
+      },
     });
   }
-
 
   async me() {
     return rp.post(this.url, {
@@ -84,8 +83,8 @@ export class TestClient {
               email
             }
           }
-        `
-      }
+        `,
+      },
     });
   }
 
@@ -100,8 +99,8 @@ export class TestClient {
             message
           }
         }
-        `
-      }
+        `,
+      },
     });
   }
 
@@ -116,8 +115,8 @@ export class TestClient {
             message
           }
         }
-        `
-      }
+        `,
+      },
     });
   }
 
@@ -132,10 +131,8 @@ export class TestClient {
             message
           }
         }
-        `
-      }
+        `,
+      },
     });
   }
-
-
 }

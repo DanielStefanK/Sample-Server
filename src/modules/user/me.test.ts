@@ -1,41 +1,37 @@
 import { host } from '../../testSetup/testUtils';
 import { TestClient } from '../../testSetup/TestClient';
 
-const email = "email2@asdas.com"
-const password = "test123"
+const email = 'email2@asdas.com';
+const password = 'test123';
 
-describe("me query", () => {
+describe('me query', () => {
+  test('with login', async done => {
+    const client = new TestClient(host);
 
-  test('with login', async (done) => {
-    const client = new TestClient(host)
+    const user = await client.createConfirmedUser(email, password);
 
-    const user = await client.createConfirmedUser(email, password)
+    await client.login(email, password);
 
-    await client.login(email, password)
-
-
-    const response = await client.me()
+    const response = await client.me();
 
     expect(response.data).toEqual({
       me: {
         id: user.id,
-        email: user.email
-      }
-    })
+        email: user.email,
+      },
+    });
 
-    done()
+    done();
   });
 
-
-  test('without login', async (done) => {
-    const client = new TestClient(host)
-    const response = await client.me()
+  test('without login', async done => {
+    const client = new TestClient(host);
+    const response = await client.me();
 
     expect(response.data).toEqual({
-      me: null
-    })
+      me: null,
+    });
 
-    done()
+    done();
   });
-
-})
+});

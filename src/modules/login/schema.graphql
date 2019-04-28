@@ -1,7 +1,7 @@
 # import * from "../../shared.graphql"
 
 type Mutation {
-  login (email: String!, password: String!): [Error!]
+  login(email: String!, password: String!): [Error!]
 }
 
 type Query {

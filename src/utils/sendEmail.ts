@@ -1,13 +1,12 @@
-import * as SparkPost from 'sparkpost'
+import * as SparkPost from 'sparkpost';
 
-
-const client = new SparkPost(process.env.SPARKPOST_API_KEY || 'valid')
+const client = new SparkPost(process.env.SPARKPOST_API_KEY || 'valid');
 
 export const sendEmail = async (recipient: string, link: string) => {
   if (process.env.NODE_ENV === 'production') {
     await client.transmissions.send({
       options: {
-        sandbox: true
+        sandbox: true,
       },
       content: {
         from: 'testing@sparkpostbox.com',
@@ -17,13 +16,11 @@ export const sendEmail = async (recipient: string, link: string) => {
             <h1>please confirm your email</h1>
             <a href="${link}">click here</a>
           </body>
-        </html>`
+        </html>`,
       },
-      recipients: [
-        { address: recipient }
-      ],
-    })
+      recipients: [{ address: recipient }],
+    });
   } else {
-    console.log({ recipient, link })
+    console.log({ recipient, link });
   }
-}
+};

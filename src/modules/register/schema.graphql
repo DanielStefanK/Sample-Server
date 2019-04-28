@@ -1,7 +1,7 @@
 # import * from "../../shared.graphql"
 
 type Mutation {
-  register (email: String!, password: String!): [Error!]
+  register(email: String!, password: String!): [Error!]
 }
 
 type Query {
