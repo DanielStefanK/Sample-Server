@@ -1,29 +1,12 @@
 // tslint:disable-next-line: no-implicit-dependencies
 import fetch from 'node-fetch'
-import { request } from 'graphql-request'
-import { Connection, ObjectType, BaseEntity } from 'typeorm';
 import * as Redis from 'ioredis'
 
 import { User } from '../../entity/User';
-import { createTypeormConn } from '../../utils/createTypeormConn';
 import { createConfirmEmailLink } from '../../utils/createConfirmEmail';
+import { host } from '../../testSetup/testUtils';
+import { TestClient } from '../../testSetup/TestClient';
 
-let conn: Connection
-
-const clearAll = async (entities: Array<ObjectType<BaseEntity>>): Promise<void> => {
-  if (!conn || !conn.isConnected) {
-    conn = await createTypeormConn()
-  }
-
-  try {
-    for await (const entity of entities) {
-      const repository = await conn.getRepository(entity);
-      await repository.query(`DELETE FROM ${repository.metadata.tableName};`);
-    }
-  } catch (error) {
-    throw new Error(`ERROR: Cleaning test db: ${error}`);
-  }
-}
 
 const email = "email@asdas.com"
 const password = "test123"
@@ -33,36 +16,13 @@ const faultyPass = "1"
 
 const redis = new Redis()
 
-const mutation = (e: string, p: string): string => `
-mutation {
-  register(email: "${e}", password: "${p}") {
-    path
-    message
-  }
-}
-`;
-
-const host: string = process.env.TEST_HOST || 'http://localhost:4004'
-
-
-
-beforeEach(async (done) => {
-  await clearAll([User])
-  done()
-})
-
-afterAll(async (done) => {
-  if (conn && conn.isConnected) {
-    await conn.close()
-  }
-  done()
-})
 
 describe("Register module", () => {
 
   test('Register User', async (done) => {
-    const response = await request(host, mutation(email, password))
-    expect(response).toEqual({ register: null })
+    const client = new TestClient(host)
+    const response = await client.register(email, password)
+    expect(response.data).toEqual({ register: null })
     const users = await User.find({ where: { email } })
     expect(users).toHaveLength(1)
 
@@ -74,39 +34,43 @@ describe("Register module", () => {
   });
 
   test('Register Duplicate fails', async (done) => {
-    const response = await request(host, mutation(email, password))
-    expect(response).toEqual({ register: null })
+    const client = new TestClient(host)
+    const response = await client.register(email, password)
+    expect(response.data).toEqual({ register: null })
 
-    const regAgain: any = await request(host, mutation(email, password))
-    expect(regAgain.register).toHaveLength(1)
+    const regAgain: any = await client.register(email, password)
+    expect(regAgain.data.register).toHaveLength(1)
 
-    expect(regAgain.register[0].path).toEqual("email")
+    expect(regAgain.data.register[0].path).toEqual("email")
     const usersAgain = await User.find({ where: { email } })
     expect(usersAgain).toHaveLength(1)
     done()
   })
 
   test('Invalid Register Input', async () => {
-    const response: any = await request(host, mutation(faultyEmail, faultyPass))
-    expect(response.register).toHaveLength(3)
+    const client = new TestClient(host)
+    const response = await client.register(faultyEmail, faultyPass)
+    expect(response.data.register).toHaveLength(3)
 
     const users = await User.find()
     expect(users).toHaveLength(0)
   })
 
   test('Invalid Email Register', async () => {
-    const response: any = await request(host, mutation("asdasdasdasd", password))
-    expect(response.register).toHaveLength(1)
-    expect(response.register[0].path).toEqual("email")
+    const client = new TestClient(host)
+    const response = await client.register("asdasdasdasd", password)
+    expect(response.data.register).toHaveLength(1)
+    expect(response.data.register[0].path).toEqual("email")
 
     const users = await User.find()
     expect(users).toHaveLength(0)
   })
 
   test('Invalid Password Register', async () => {
-    const response: any = await request(host, mutation(email, faultyPass))
-    expect(response.register).toHaveLength(1)
-    expect(response.register[0].path).toEqual("password")
+    const client = new TestClient(host)
+    const response = await client.register(email, faultyPass)
+    expect(response.data.register).toHaveLength(1)
+    expect(response.data.register[0].path).toEqual("password")
 
     const users = await User.find()
     expect(users).toHaveLength(0)
