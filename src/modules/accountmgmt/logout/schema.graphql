@@ -1,5 +1,3 @@
-# import * from "../../shared.graphql"
-
 type Mutation {
   logout: [Error!]
   logoutAll: [Error!]

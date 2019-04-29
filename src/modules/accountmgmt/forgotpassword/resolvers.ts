@@ -1,13 +1,13 @@
 import * as bcrypt from 'bcrypt';
 import * as yup from 'yup';
 
-import { ResolverMap } from '../../types/graphql-utils';
-import { User } from '../../entity/User';
-import { redisPasswordResetPrefix } from '../../utils/constants';
-import { passwordModel } from '../../utils/validityModels';
-import { formatYupError } from '../../utils/formatYupError';
-import { forgotPasswordLockAccount } from '../../utils/forgotPasswordLockAccount';
-import { createForgotPasswordEmail } from '../../utils/createForgotPasswordEmail';
+import { ResolverMap } from '../../../types/graphql-utils';
+import { User } from '../../../entity/User';
+import { redisPasswordResetPrefix } from '../../../utils/constants';
+import { passwordModel } from '../../../utils/validityModels';
+import { formatYupError } from '../../../utils/formatYupError';
+import { forgotPasswordLockAccount } from '../../../utils/forgotPasswordLockAccount';
+import { createForgotPasswordEmail } from '../../../utils/createForgotPasswordEmail';
 
 const schema = yup.object().shape({
   newPassword: passwordModel,

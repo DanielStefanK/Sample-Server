@@ -1,9 +1,9 @@
 import * as Redis from 'ioredis';
 
-import { TestClient } from '../../testSetup/TestClient';
-import { host } from '../../testSetup/testUtils';
-import { createForgotPasswordEmail } from '../../utils/createForgotPasswordEmail';
-import { forgotPasswordLockAccount } from '../../utils/forgotPasswordLockAccount';
+import { TestClient } from '../../../testSetup/TestClient';
+import { host } from '../../../testSetup/testUtils';
+import { createForgotPasswordEmail } from '../../../utils/createForgotPasswordEmail';
+import { forgotPasswordLockAccount } from '../../../utils/forgotPasswordLockAccount';
 
 const email = 'email2@asdas.com';
 const password = 'test123';

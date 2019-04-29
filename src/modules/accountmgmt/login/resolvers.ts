@@ -1,8 +1,8 @@
 import * as bcrypt from 'bcrypt';
 
-import { ResolverMap } from '../../types/graphql-utils';
-import { User } from '../../entity/User';
-import { redisSessionUserIdPrefix } from '../../utils/constants';
+import { ResolverMap } from '../../../types/graphql-utils';
+import { User } from '../../../entity/User';
+import { redisSessionUserIdPrefix } from '../../../utils/constants';
 
 export const resolvers: ResolverMap = {
   Query: {

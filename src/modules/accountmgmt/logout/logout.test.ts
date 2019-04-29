@@ -1,5 +1,5 @@
-import { TestClient } from '../../testSetup/TestClient';
-import { host } from '../../testSetup/testUtils';
+import { TestClient } from '../../../testSetup/TestClient';
+import { host } from '../../../testSetup/testUtils';
 
 const email = 'email2@asdas.com';
 const password = 'test123';

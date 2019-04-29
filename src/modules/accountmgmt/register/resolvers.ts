@@ -1,12 +1,12 @@
 import * as bcrypt from 'bcrypt';
 import * as yup from 'yup';
 
-import { ResolverMap } from '../../types/graphql-utils';
-import { User } from '../../entity/User';
-import { formatYupError } from '../../utils/formatYupError';
-import { createConfirmEmailLink } from '../../utils/createConfirmEmail';
-import { sendEmail } from '../../utils/sendEmail';
-import { passwordModel } from '../../utils/validityModels';
+import { ResolverMap } from '../../../types/graphql-utils';
+import { User } from '../../../entity/User';
+import { formatYupError } from '../../../utils/formatYupError';
+import { createConfirmEmailLink } from '../../../utils/createConfirmEmail';
+import { sendEmail } from '../../../utils/sendEmail';
+import { passwordModel } from '../../../utils/validityModels';
 
 const schema = yup.object().shape({
   email: yup

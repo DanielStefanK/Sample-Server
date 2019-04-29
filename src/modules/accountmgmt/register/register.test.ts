@@ -2,10 +2,10 @@
 import fetch from 'node-fetch';
 import * as Redis from 'ioredis';
 
-import { User } from '../../entity/User';
-import { createConfirmEmailLink } from '../../utils/createConfirmEmail';
-import { host } from '../../testSetup/testUtils';
-import { TestClient } from '../../testSetup/TestClient';
+import { User } from '../../../entity/User';
+import { createConfirmEmailLink } from '../../../utils/createConfirmEmail';
+import { host } from '../../../testSetup/testUtils';
+import { TestClient } from '../../../testSetup/TestClient';
 
 const email = 'email@asdas.com';
 const password = 'test123';
